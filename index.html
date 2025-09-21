@@ -1,178 +1,183 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Onr8chirag</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- Plyr CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.css">
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.polyfilled.js"></script>
 
-  <style>
-    body {
-      margin: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background: #000;
-    }
-    .plyr__video-embed,
-    video {
-      width: 100%;
-      max-width: 100%;
-      aspect-ratio: 16 / 9; /* keeps player 16:9 */
-    }
-/* Premium Popup Styles */
-.popup {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.85);
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-}
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-.popup-content {
-  background: #111; /* Darker, premium background */
-  color: #fff;
-  padding: 30px 35px;
-  border-radius: 20px;
-  text-align: center;
-  width: 85%;
-  max-width: 450px;
-  border: 5px solid gold; /* Strong golden outline */
-  box-shadow: 0 0 25px gold, 0 0 50px rgba(255, 215, 0, 0.3);
-  animation: popupFade 0.5s ease-in-out;
-}
+  .video-container {
+    position: relative;
+    width: 110%;
+    height: 100%;
+    background: #000;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-@keyframes popupFade {
-  0% { transform: scale(0.7); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
-}
+  video {
+    width: 110%;
+    max-height: 100%;
+    object-fit: contain; /* keeps correct aspect ratio */
+    background: #000;
+  }
 
-.popup-content h2 {
-  margin: 0 0 12px;
-  font-size: 24px;
-  color: #ffd700; /* Golden Title */
-  font-weight: bold;
-  text-shadow: 0 0 8px gold;
-}
+  /* Premium Popup Styles */
+  .popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
 
-.popup-content p {
-  font-size: 16px;
-  margin: 10px 0 20px;
-  line-height: 1.4;
-}
+  .popup-content {
+    background: #111; /* Darker, premium background */
+    color: #fff;
+    padding: 30px 35px;
+    border-radius: 20px;
+    text-align: center;
+    width: 85%;
+    max-width: 450px;
+    border: 5px solid gold; /* Strong golden outline */
+    box-shadow: 0 0 25px gold, 0 0 50px rgba(255, 215, 0, 0.3);
+    animation: popupFade 0.5s ease-in-out;
+  }
 
-.popup-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
+  @keyframes popupFade {
+    0% { transform: scale(0.7); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
 
-.popup-buttons button {
-  padding: 12px 0;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
-  transition: all 0.3s ease;
-}
+  .popup-content h2 {
+    margin: 0 0 12px;
+    font-size: 24px;
+    color: #ffd700; /* Golden Title */
+    font-weight: bold;
+    text-shadow: 0 0 8px gold;
+  }
 
-.join-btn {
-  background: linear-gradient(90deg, #ffd700, #ffec70);
-  color: black;
-  border-radius: 8px;
-  font-weight: bold;
-  box-shadow: 0 0 10px gold;
-}
+  .popup-content p {
+    font-size: 16px;
+    margin: 10px 0 20px;
+    line-height: 1.4;
+  }
 
-.join-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 20px gold;
-}
+  .popup-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
 
-.already-btn {
-  background: #333;
-  color: white;
-  border-radius: 8px;
-  border: 1px solid #555;
-}
+  .popup-buttons button {
+    padding: 12px 0;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease;
+  }
 
-.already-btn:hover {
-  background: #444;
-}
+  .join-btn {
+    background: linear-gradient(90deg, #ffd700, #ffec70);
+    color: black;
+    border-radius: 8px;
+    font-weight: bold;
+    box-shadow: 0 0 10px gold;
+  }
 
-.telegram-link {
-  color: #ffd700;
-  font-weight: bold;
-  text-decoration: none;
-  cursor: pointer;
-}
-  </style>
-</head>
-<body>
+  .join-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px gold;
+  }
 
-  <video id="player" controls playsinline></video>
+  .already-btn {
+    background: #333;
+    color: white;
+    border-radius: 8px;
+    border: 1px solid #555;
+  }
 
-  <!-- HLS.js -->
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js"></script>
-  <!-- Plyr JS -->
-  <script src="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.min.js"></script>
-  <!-- Premium Popup -->
-  <div class="popup" id="customPopup">
-    <div class="popup-content">
-      <h2>Support Us!</h2>
-      <p>
-        Join our Telegram channel 
-        <a href="https://t.me/one8ch1raggg" class="telegram-link">@one8chirag</a> 
-        for exclusive updates and premium content.
-      </p>
-      <div class="popup-buttons">
-        <button class="join-btn" onclick="window.location.href='https://t.me/one8ch1raggg'">Join Now</button>
-        <button class="already-btn" onclick="closePopup()">Already Joined</button>
-      </div>
+  .already-btn:hover {
+    background: #444;
+  }
+
+  .telegram-link {
+    color: #ffd700;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+  }
+</style>
+
+<div class="video-container">
+  <video autoplay="yes" oncanplay="this.muted=true" id="player" controls preload="metadata" poster="https://i.ibb.co/twQ9J4RH/473bb2e2-f37d-499f-8099-354959666670.png"></video>
+</div>
+
+<!-- Premium Popup -->
+<div class="popup" id="customPopup">
+  <div class="popup-content">
+    <h2>Support Us!</h2>
+    <p>
+      Join our Telegram channel 
+      <a href="https://t.me/one8ch1raggg" class="telegram-link">@one8chirag</a> 
+      for exclusive updates and premium content.
+    </p>
+    <div class="popup-buttons">
+      <button class="join-btn" onclick="window.location.href='https://t.me/one8ch1raggg'">Join Now</button>
+      <button class="already-btn" onclick="closePopup()">Already Joined</button>
     </div>
   </div>
+</div>
 
-
-  <script>
-    const streamURL = "https://media.onestream.studio/content/hls/live/live_4139402_6zjrbyf6x/hls.m3u8";
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
     const video = document.getElementById("player");
+    const source = "https://media.onestream.studio/content/hls/live/live_4457295_s79sdbfgi/hls.m3u8";
 
     if (Hls.isSupported()) {
       const hls = new Hls({
         xhrSetup: function (xhr) {
           xhr.setRequestHeader("Ortmp", "south-asia-mumbai-1");
           xhr.setRequestHeader("X-Origin-Host", "south-asia-mumbai-1");
-          xhr.setRequestHeader("vKey", "live_4139402_6zjrbyf6x?auth=p_auth_4139402_754stsirp");
+          xhr.setRequestHeader("vKey", "live_4457295_s79sdbfgi?auth=p_auth_4457295_ze8bv2qch");
           xhr.setRequestHeader("Referer", "https://app.onestream.live/multicast");
+          xhr.setRequestHeader("User-Agent", "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Mobile Safari/537.36");
         }
       });
-      hls.loadSource(streamURL);
+      hls.loadSource(source);
       hls.attachMedia(video);
-      hls.on(Hls.Events.MANIFEST_PARSED, () => {
-        video.play().catch(() => {});
-      });
+      hls.on(Hls.Events.MANIFEST_PARSED, () => video.play());
     } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
-      video.src = streamURL;
-      video.play().catch(() => {});
+      video.src = source;
+      video.addEventListener("loadedmetadata", () => video.play());
     }
 
-    // Initialize Plyr
-    const player = new Plyr(video);
-// Show popup after 2 seconds
-setTimeout(() => {
-  document.getElementById("customPopup").style.display = "flex";
-}, 2000);
+    new Plyr(video);
 
-function closePopup() {
-  document.getElementById("customPopup").style.display = "none";
-}
-  </script>
-</body>
-</html>
+    // Show popup after 2 seconds
+    setTimeout(() => {
+      document.getElementById("customPopup").style.display = "flex";
+    }, 2000);
+  });
+
+  function closePopup() {
+    document.getElementById("customPopup").style.display = "none";
+  }
+</script>
